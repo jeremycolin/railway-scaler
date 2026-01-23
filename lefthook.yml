@@ -1,0 +1,9 @@
+pre-commit:
+  parallel: true
+  commands:
+    format:check:
+      tags: code-quality
+      run: pnpm format:check
+    types:types:
+      tags: code-quality
+      run: pnpm types:check
