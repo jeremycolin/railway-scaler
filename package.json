@@ -1,5 +1,5 @@
 {
-  "name": "railway-scaler",
+  "name": "@app/railway-scaler",
   "type": "module",
   "scripts": {
     "format:check": "pnpm -r --stream --aggregate-output run format:check",
