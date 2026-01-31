@@ -9,11 +9,7 @@ export const PostConnectionView = {
   },
 };
 
-export function PostsListView({
-  posts: postsRef,
-}: {
-  posts: ConnectionRef<"Post">;
-}) {
+export function PostsListView({ posts: postsRef }: { posts: ConnectionRef<"Post"> }) {
   const [posts] = useListView(PostConnectionView, postsRef);
   return (
     <div>

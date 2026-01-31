@@ -2,29 +2,40 @@ import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
 import { Field, FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { useView, view, type ViewRef } from "react-fate";
+import type { Project } from "@app/api/src/trpc/views";
 
-const formSchema = z.object({
-  railwayProjectAccessToken: z
-    .string()
-    .trim()
-    .min(1, "Project access token is required"),
+export const ProjectTokenView = view<Project>()({
+  id: true,
+  error: true,
+  message: true,
 });
 
-export const ProjectSelector = ({
+const formSchema = z.object({
+  railwayProjectAccessToken: z.string().trim().min(1, "Railway project access token is required"),
+});
+
+export const ProjectToken = ({
+  project: projectRef,
   onSelect,
 }: {
+  project: ViewRef<"Project">;
   onSelect: (railwayProjectAccessToken: string) => void;
 }) => {
+  const project = useView(ProjectTokenView, projectRef);
+
   const form = useForm({
     defaultValues: {
-      railwayProjectAccessToken: "",
+      railwayProjectAccessToken: sessionStorage.getItem("railwayProjectAccessToken") ?? "",
     },
     validators: {
       onSubmit: formSchema,
     },
     onSubmit: ({ value }) => {
       const data = value.railwayProjectAccessToken.trim();
+      console.log("data: ", data);
       if (data) {
+        sessionStorage.setItem("railwayProjectAccessToken", data);
         onSelect(data);
       }
     },
@@ -36,13 +47,15 @@ export const ProjectSelector = ({
         e.preventDefault();
         form.handleSubmit();
       }}
-      className="w-full max-w-lg"
     >
       <form.Field
         name="railwayProjectAccessToken"
         children={(field) => {
-          const isInvalid =
-            field.state.meta.isTouched && !field.state.meta.isValid;
+          const isTouched = field.state.meta.isTouched;
+          const isInvalid = isTouched && !field.state.meta.isValid;
+          const isApiError = isTouched && !isInvalid && project.error === "ProjectNotFound";
+
+          console.log(field.state.meta.errors);
 
           return (
             <Field data-invalid={isInvalid}>
@@ -57,6 +70,7 @@ export const ProjectSelector = ({
                 placeholder="Enter your Railway project access token"
               />
               {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              {isApiError && <FieldError errors={[{ message: project.message }]} />}
             </Field>
           );
         }}

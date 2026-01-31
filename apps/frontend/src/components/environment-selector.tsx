@@ -1,39 +1,52 @@
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useRequest, useView, view } from "react-fate";
-import type { Project } from "@app/api/src/trpc/views";
+import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
 
-export const ProjectView = view<Project>()({
+import { useView, view, type ViewRef } from "react-fate";
+import type { Project, Environment } from "@app/api/src/trpc/views";
+
+const EnvironmentView = view<Environment>()({
   id: true,
   name: true,
 });
 
-export const EnvironmentSelector = () => {
-  const { project: projectRef } = useRequest({
-    project: { view: ProjectView },
-  });
+const EnvironmentConnectionView = {
+  items: {
+    node: EnvironmentView,
+  },
+};
+
+export const ProjectView = view<Project>()({
+  id: true,
+  name: true,
+  environments: EnvironmentConnectionView,
+  error: true,
+  message: true,
+});
+
+export const EnvironmentSelector = ({ project: projectRef }: { project: ViewRef<"Project"> }) => {
   const project = useView(ProjectView, projectRef);
 
-  console.log("project: ", project);
+  if (!project.id) {
+    return null;
+  }
+
   return (
-    <Select>
-      <SelectTrigger className="w-full max-w-48">
-        <SelectValue placeholder="Select an environment" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectGroup>
-          <SelectLabel>Environments</SelectLabel>
-          <SelectItem value="apple">Apple</SelectItem>
-          <SelectItem value="banana">Banana</SelectItem>
-        </SelectGroup>
-      </SelectContent>
-    </Select>
+    <div>
+      <h2 className="text-lg font-semibold my-4">Project: {project.name}</h2>
+      <NativeSelect>
+        <NativeSelectOption value="">Select an environment</NativeSelectOption>
+        {project.environments.items.map(({ node }) => (
+          <EnvironmentItem key={node.id} environment={node} />
+        ))}
+      </NativeSelect>
+    </div>
+  );
+};
+
+const EnvironmentItem = ({ environment: environmentRef }: { environment: ViewRef<"Environment"> }) => {
+  const environment = useView(EnvironmentView, environmentRef);
+  return (
+    <NativeSelectOption key={environment.id} value={environment.id}>
+      {environment.name}
+    </NativeSelectOption>
   );
 };

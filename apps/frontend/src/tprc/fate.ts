@@ -13,8 +13,6 @@ const mutations = {
 } as const;
 
 const roots = {
-  'post': clientRoot<RouterOutputs['post']['byId'], 'Post'>('Post'),
-  'posts': clientRoot<RouterOutputs['post']['list'], 'Post'>('Post'),
   'project': clientRoot<RouterOutputs['project']['project'], 'Project'>('Project'),
 } as const;
 
@@ -40,31 +38,25 @@ export const createFateClient = (options: {
     roots,
     transport: createTRPCTransport<AppRouter, typeof trpcMutations>({
       byId: {
-        Post: (client: TRPCClientType) => ({
-          args,
-          ids,
-          select,
-        }: { args?: Record<string, unknown>; ids: Array<string | number>; select: Array<string> }) =>
-          client.post.byId.query({
-            args,
-            ids: ids.map(String),
-            select,
-          }),
+
       },
       client: trpcClient,
       queries: {
         project: (client: TRPCClientType) => client.project.project.query,
       },
-      lists: {
-        posts: (client: TRPCClientType) => client.post.list.query,
-      },
       mutations: trpcMutations,
     }),
     types: [
         {
+          type: 'Environment',
+        },
+        {
           type: 'Post',
         },
         {
+          fields: {
+            environments: { listOf: 'Environment' },
+          },
           type: 'Project',
         },
       ],

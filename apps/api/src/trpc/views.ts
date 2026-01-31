@@ -12,15 +12,38 @@ export const postDataView = dataView<{
 
 export type Post = Entity<typeof postDataView, "Post">;
 
-export const projectDataView = dataView<{
+export const environmentDataView = dataView<{
   id: string;
   name: string;
-}>("Project")({
+}>("Environment")({
   id: true,
   name: true,
 });
 
-export type Project = Entity<typeof projectDataView, "Project">;
+export type Environment = Entity<typeof environmentDataView, "Environment">;
+
+export const projectDataView = dataView<
+  | {
+      id: string;
+      name: string;
+      environments: Array<Environment>;
+    }
+  | { error: "MissingProjectAccessToken" | "ProjectNotFound"; message: string }
+>("Project")({
+  id: true,
+  name: true,
+  environments: list(environmentDataView),
+  error: true,
+  message: true,
+});
+
+export type Project = Entity<
+  typeof projectDataView,
+  "Project",
+  {
+    environments: Array<Environment>;
+  }
+>;
 
 export const Root = {
   posts: list(postDataView),

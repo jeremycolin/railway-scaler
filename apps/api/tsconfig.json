@@ -13,7 +13,14 @@
     "types": ["node"],
     "sourceMap": true,
     "forceConsistentCasingInFileNames": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    "plugins": [
+      {
+        "name": "@0no-co/graphqlsp",
+        "schema": "./src/graphql/codegen/schema.graphql"
+      }
+    ]
   },
   "include": ["./src"]
 }

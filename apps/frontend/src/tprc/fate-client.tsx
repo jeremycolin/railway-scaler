@@ -1,6 +1,6 @@
 import { httpBatchLink } from "@trpc/client";
 import { FateClient } from "react-fate";
-import { useMemo } from "react";
+import { Suspense, useMemo } from "react";
 import { createFateClient } from "./fate.ts";
 import { App } from "../app.tsx";
 
@@ -18,7 +18,9 @@ export const FateClientProvider = () => {
   );
   return (
     <FateClient client={fate}>
-      <App />
+      <Suspense>
+        <App />
+      </Suspense>
     </FateClient>
   );
 };
