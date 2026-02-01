@@ -1,14 +1,17 @@
 import type { ExecutionResult } from "graphql";
 import type { TypedDocumentString } from "./codegen/graphql.ts";
 
-const RAILWAY_API_URL = "https://backboard.railway.com/graphql/v2";
+const railwayApiUrl = process.env["RAILWAY_API_URL"]!;
+if (!railwayApiUrl) {
+  throw new Error("RAILWAY_API_URL is not set");
+}
 
 export function createRailwayApi(token: string) {
   return async function executeRailwayApi<TResult, TVariables>(
     query: TypedDocumentString<TResult, TVariables>,
     ...[variables]: TVariables extends Record<string, never> ? [] : [TVariables]
   ) {
-    const response = await fetch(RAILWAY_API_URL, {
+    const response = await fetch(railwayApiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -4,13 +4,15 @@ import { Suspense, useMemo } from "react";
 import { createFateClient } from "./fate.ts";
 import { App } from "../app.tsx";
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 export const FateClientProvider = () => {
   const fate = useMemo(
     () =>
       createFateClient({
         links: [
           httpBatchLink({
-            url: `http://localhost:4000/trpc`,
+            url: `${apiUrl}/trpc`,
           }),
         ],
       }),

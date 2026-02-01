@@ -28,7 +28,6 @@ const environmentInfoQUery = graphql(`
 `);
 
 export async function getEnvironmentInfo({ railwayProjectAccessToken, id }: { railwayProjectAccessToken: string; id: string }) {
-  console.log("fetch!");
   const executor = createRailwayApi(railwayProjectAccessToken);
   return executor(environmentInfoQUery, { id });
 }
