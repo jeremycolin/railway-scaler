@@ -1,10 +1,7 @@
 import type { ExecutionResult } from "graphql";
 import type { TypedDocumentString } from "./codegen/graphql.ts";
 
-const railwayApiUrl = process.env["RAILWAY_API_URL"]!;
-if (!railwayApiUrl) {
-  throw new Error("RAILWAY_API_URL is not set");
-}
+const railwayApiUrl = "https://backboard.railway.com/graphql/v2";
 
 export function createRailwayApi(token: string) {
   return async function executeRailwayApi<TResult, TVariables>(
