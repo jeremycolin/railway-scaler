@@ -2,7 +2,7 @@ import { useRequest, useView, view, type ViewRef } from "react-fate";
 import type { Environment } from "@app/api/src/trpc/views";
 import { ServiceInstanceCard, ServiceInstanceView } from "./service-instance-card";
 
-export const EnvironmentView = view<Environment>()({
+const EnvironmentView = view<Environment>()({
   name: true,
   serviceInstances: { items: { node: ServiceInstanceView } },
 });
