@@ -74,7 +74,7 @@ export function isFragmentReady<TQuery, TFrag>(
   fragmentNode: TypedDocumentString<TFrag, any>,
   data: FragmentType<TypedDocumentString<Incremental<TFrag>, any>> | null | undefined,
 ): data is FragmentType<typeof fragmentNode> {
-  const deferredFields = queryNode.__meta__?.["deferredFields"] as Record<string, (keyof TFrag)[]>;
+  const deferredFields = queryNode.__meta__?.["deferred"] as Record<string, (keyof TFrag)[]>;
   const fragName = fragmentNode.__meta__?.["fragmentName"] as string | undefined;
 
   if (!deferredFields || !fragName) return true;

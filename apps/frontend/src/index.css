@@ -10,6 +10,7 @@
 
   --background: rgb(19 17 28);
   --foreground: rgb(255 255 255);
+  --card-surface: rgb(12 11 18);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
@@ -22,7 +23,13 @@
   --muted-foreground: oklch(0.556 0 0);
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.58 0.22 27);
+  --destructive: oklch(0.68 0.16 27);
+  --sleep: oklch(0.62 0.18 290);
+  --wake: oklch(0.62 0.16 145);
+  --sync: oklch(0.65 0.18 230);
+  --sync-foreground: oklch(0.85 0.12 230);
+  --redeploy: oklch(0.65 0.16 45);
+  --redeploy-foreground: oklch(0.98 0.02 45);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
@@ -45,6 +52,7 @@
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
+  --card-surface: rgb(10 9 16);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
@@ -57,7 +65,13 @@
   --muted-foreground: oklch(0.708 0 0);
   --accent: oklch(0.371 0 0);
   --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
+  --destructive: oklch(0.78 0.14 22);
+  --sleep: oklch(0.72 0.16 290);
+  --wake: oklch(0.72 0.14 145);
+  --sync: oklch(0.72 0.16 230);
+  --sync-foreground: oklch(0.88 0.1 230);
+  --redeploy: oklch(0.72 0.14 45);
+  --redeploy-foreground: oklch(0.98 0.02 45);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
@@ -95,6 +109,12 @@
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+  --color-sleep: var(--sleep);
+  --color-wake: var(--wake);
+  --color-sync: var(--sync);
+  --color-sync-foreground: var(--sync-foreground);
+  --color-redeploy: var(--redeploy);
+  --color-redeploy-foreground: var(--redeploy-foreground);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -107,6 +127,7 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-card-surface: var(--card-surface);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
   --radius-sm: calc(var(--radius) - 4px);

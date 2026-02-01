@@ -1,44 +1,81 @@
 import { dataView, list, type Entity } from "@nkzw/fate/server";
 
-export const postDataView = dataView<{
-  id: string;
-  title: string;
-  content: string;
-}>("Post")({
-  id: true,
-  title: true,
-  content: true,
-});
-
-export type Post = Entity<typeof postDataView, "Post">;
-
-export const environmentDataView = dataView<{
+const serviceView = dataView<{
   id: string;
   name: string;
-}>("Environment")({
+}>("Service")({
   id: true,
   name: true,
 });
+export type Service = Entity<typeof serviceView, "Service">;
 
-export type Environment = Entity<typeof environmentDataView, "Environment">;
+const deploymentView = dataView<{
+  id: string;
+  status: string;
+}>("Deployment")({
+  id: true,
+  status: true,
+});
+export type Deployment = Entity<typeof deploymentView, "Deployment">;
 
-export const projectDataView = dataView<
+export const serviceInstanceView = dataView<{
+  id: string;
+  numReplicas: number;
+  sleepApplication: boolean;
+  service: Service;
+  latestDeployment: Deployment | null;
+}>("ServiceInstance")({
+  id: true,
+  numReplicas: true,
+  sleepApplication: true,
+  service: serviceView,
+  latestDeployment: deploymentView,
+});
+
+const serviceInstanceEnvView = dataView<{
+  id: string;
+  numReplicas: number;
+  sleepApplication: boolean;
+  service: Service;
+  latestDeployment: Deployment | null;
+}>("ServiceInstance")({
+  id: true,
+  numReplicas: true,
+  sleepApplication: true,
+  service: serviceView,
+  latestDeployment: deploymentView,
+});
+export type ServiceInstance = Entity<typeof serviceInstanceEnvView, "ServiceInstance">;
+
+export const environmentView = dataView<{ id: string; name: string; serviceInstances: Array<ServiceInstance> }>("Environment")({
+  id: true,
+  name: true,
+  serviceInstances: list(serviceInstanceEnvView),
+});
+export type Environment = Entity<
+  typeof environmentView,
+  "Environment",
+  {
+    serviceInstances: Array<ServiceInstance>;
+  }
+>;
+
+export const projectView = dataView<
   | {
       id: string;
       name: string;
       environments: Array<Environment>;
     }
-  | { error: "MissingProjectAccessToken" | "ProjectNotFound"; message: string }
+  | { error: "ProjectNotFound"; message: string }
 >("Project")({
   id: true,
   name: true,
-  environments: list(environmentDataView),
+  environments: list(environmentView),
   error: true,
   message: true,
 });
-
 export type Project = Entity<
-  typeof projectDataView,
+  typeof projectView,
   "Project",
   {
     environments: Array<Environment>;
@@ -46,6 +83,7 @@ export type Project = Entity<
 >;
 
 export const Root = {
-  posts: list(postDataView),
-  project: projectDataView,
+  project: projectView,
+  environment: environmentView,
+  serviceInstance: serviceInstanceView,
 };

@@ -5971,6 +5971,54 @@ export type CustomerTogglePayoutsToCreditsInput = {
   isWithdrawingToCredits: Scalars["Boolean"]["input"];
 };
 
+export type DeployServiceMutationVariables = Exact<{
+  serviceId: Scalars["String"]["input"];
+  environmentId: Scalars["String"]["input"];
+}>;
+
+export type DeployServiceMutation = { __typename?: "Mutation"; serviceInstanceDeployV2: string };
+
+export type DeploymentRemoveMutationVariables = Exact<{
+  id: Scalars["String"]["input"];
+}>;
+
+export type DeploymentRemoveMutation = { __typename?: "Mutation"; deploymentRemove: boolean };
+
+export type EnableServerlessMutationVariables = Exact<{
+  environmentId: Scalars["String"]["input"];
+  serviceId: Scalars["String"]["input"];
+  input: ServiceInstanceUpdateInput;
+}>;
+
+export type EnableServerlessMutation = { __typename?: "Mutation"; serviceInstanceUpdate: boolean };
+
+export type EnvironmentInfoQueryVariables = Exact<{
+  id: Scalars["String"]["input"];
+}>;
+
+export type EnvironmentInfoQuery = {
+  __typename?: "Query";
+  environment: {
+    __typename?: "Environment";
+    id: string;
+    name: string;
+    serviceInstances: {
+      __typename?: "EnvironmentServiceInstancesConnection";
+      edges: Array<{
+        __typename?: "EnvironmentServiceInstancesConnectionEdge";
+        node: {
+          __typename?: "ServiceInstance";
+          id: string;
+          numReplicas?: number | null;
+          sleepApplication?: boolean | null;
+          service: { __typename?: "Service"; id: string; name: string };
+          latestDeployment?: { __typename?: "Deployment"; id: string; status: DeploymentStatus } | null;
+        };
+      }>;
+    };
+  };
+};
+
 export type ProjectTokenInfoQueryVariables = Exact<{ [key: string]: never }>;
 
 export type ProjectTokenInfoQuery = {
@@ -5989,6 +6037,38 @@ export type ProjectTokenInfoQuery = {
   };
 };
 
+export type RedeployServiceMutationVariables = Exact<{
+  serviceId: Scalars["String"]["input"];
+  environmentId: Scalars["String"]["input"];
+}>;
+
+export type RedeployServiceMutation = { __typename?: "Mutation"; serviceInstanceRedeploy: boolean };
+
+export type ServiceInstanceInfoQueryVariables = Exact<{
+  environmentId: Scalars["String"]["input"];
+  serviceId: Scalars["String"]["input"];
+}>;
+
+export type ServiceInstanceInfoQuery = {
+  __typename?: "Query";
+  serviceInstance: {
+    __typename?: "ServiceInstance";
+    id: string;
+    numReplicas?: number | null;
+    sleepApplication?: boolean | null;
+    service: { __typename?: "Service"; id: string; name: string };
+    latestDeployment?: { __typename?: "Deployment"; id: string; status: DeploymentStatus } | null;
+  };
+};
+
+export type UpdateReplicasMutationVariables = Exact<{
+  environmentId: Scalars["String"]["input"];
+  serviceId: Scalars["String"]["input"];
+  input: ServiceInstanceUpdateInput;
+}>;
+
+export type UpdateReplicasMutation = { __typename?: "Mutation"; serviceInstanceUpdate: boolean };
+
 export class TypedDocumentString<TResult, TVariables> extends String implements DocumentTypeDecoration<TResult, TVariables> {
   __apiType?: NonNullable<DocumentTypeDecoration<TResult, TVariables>["__apiType"]>;
   private value: string;
@@ -6005,8 +6085,52 @@ export class TypedDocumentString<TResult, TVariables> extends String implements 
   }
 }
 
+export const DeployServiceDocument = new TypedDocumentString(`
+    mutation deployService($serviceId: String!, $environmentId: String!) {
+  serviceInstanceDeployV2(serviceId: $serviceId, environmentId: $environmentId)
+}
+    `) as unknown as TypedDocumentString<DeployServiceMutation, DeployServiceMutationVariables>;
+export const DeploymentRemoveDocument = new TypedDocumentString(`
+    mutation deploymentRemove($id: String!) {
+  deploymentRemove(id: $id)
+}
+    `) as unknown as TypedDocumentString<DeploymentRemoveMutation, DeploymentRemoveMutationVariables>;
+export const EnableServerlessDocument = new TypedDocumentString(`
+    mutation enableServerless($environmentId: String!, $serviceId: String!, $input: ServiceInstanceUpdateInput!) {
+  serviceInstanceUpdate(
+    environmentId: $environmentId
+    serviceId: $serviceId
+    input: $input
+  )
+}
+    `) as unknown as TypedDocumentString<EnableServerlessMutation, EnableServerlessMutationVariables>;
+export const EnvironmentInfoDocument = new TypedDocumentString(`
+    query environmentInfo($id: String!) {
+  environment(id: $id) {
+    id
+    name
+    serviceInstances {
+      edges {
+        node {
+          id
+          numReplicas
+          sleepApplication
+          service {
+            id
+            name
+          }
+          latestDeployment {
+            id
+            status
+          }
+        }
+      }
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<EnvironmentInfoQuery, EnvironmentInfoQueryVariables>;
 export const ProjectTokenInfoDocument = new TypedDocumentString(`
-    query ProjectTokenInfo {
+    query projectTokenInfo {
   projectToken {
     project {
       id
@@ -6023,3 +6147,34 @@ export const ProjectTokenInfoDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<ProjectTokenInfoQuery, ProjectTokenInfoQueryVariables>;
+export const RedeployServiceDocument = new TypedDocumentString(`
+    mutation redeployService($serviceId: String!, $environmentId: String!) {
+  serviceInstanceRedeploy(serviceId: $serviceId, environmentId: $environmentId)
+}
+    `) as unknown as TypedDocumentString<RedeployServiceMutation, RedeployServiceMutationVariables>;
+export const ServiceInstanceInfoDocument = new TypedDocumentString(`
+    query serviceInstanceInfo($environmentId: String!, $serviceId: String!) {
+  serviceInstance(environmentId: $environmentId, serviceId: $serviceId) {
+    id
+    numReplicas
+    sleepApplication
+    service {
+      id
+      name
+    }
+    latestDeployment {
+      id
+      status
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<ServiceInstanceInfoQuery, ServiceInstanceInfoQueryVariables>;
+export const UpdateReplicasDocument = new TypedDocumentString(`
+    mutation updateReplicas($environmentId: String!, $serviceId: String!, $input: ServiceInstanceUpdateInput!) {
+  serviceInstanceUpdate(
+    environmentId: $environmentId
+    serviceId: $serviceId
+    input: $input
+  )
+}
+    `) as unknown as TypedDocumentString<UpdateReplicasMutation, UpdateReplicasMutationVariables>;

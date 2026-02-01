@@ -6,7 +6,6 @@ import { useView, view, type ViewRef } from "react-fate";
 import type { Project } from "@app/api/src/trpc/views";
 
 export const ProjectTokenView = view<Project>()({
-  id: true,
   error: true,
   message: true,
 });
@@ -33,7 +32,6 @@ export const ProjectToken = ({
     },
     onSubmit: ({ value }) => {
       const data = value.railwayProjectAccessToken.trim();
-      console.log("data: ", data);
       if (data) {
         sessionStorage.setItem("railwayProjectAccessToken", data);
         onSelect(data);
@@ -53,9 +51,7 @@ export const ProjectToken = ({
         children={(field) => {
           const isTouched = field.state.meta.isTouched;
           const isInvalid = isTouched && !field.state.meta.isValid;
-          const isApiError = isTouched && !isInvalid && project.error === "ProjectNotFound";
-
-          console.log(field.state.meta.errors);
+          const isApiError = form.state.isSubmitted && !isInvalid && project.error === "ProjectNotFound";
 
           return (
             <Field data-invalid={isInvalid}>
